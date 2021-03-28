@@ -1,12 +1,9 @@
 package com.tex.network;
 
-import androidx.lifecycle.LiveData;
-
 import com.tex.response.WikiResponse;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -16,10 +13,14 @@ public interface WikiService {
 
     @Multipart
     @Headers({
+            "Authority: en.wikipedia.org",
+            "Method: POST",
+            "Path: /api/rest_v1/media/math/check/tex",
+            "Scheme: https",
             "Accept: application/json",
-            "Content-Type: multipart/form-data"
+            "Accept-Encoding: gzip, deflate, br"
     })
     @POST("media/math/check/tex")
-    public Call<WikiResponse> checkExpression(@Part("q") String exp);
+    Call<WikiResponse> checkExpression(@Part("q") RequestBody exp);
 
 }

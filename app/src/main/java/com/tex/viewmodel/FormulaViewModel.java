@@ -8,18 +8,20 @@ import com.tex.network.NetworkRepo;
 import com.tex.network.WikiService;
 import com.tex.response.WikiResponse;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FormulaViewModel extends ViewModel {
 
-    public void onClick(){
-        NetworkRepo.build().create(WikiService.class).checkExpression("a + b = c").enqueue(new Callback<WikiResponse>() {
+    public void onClick() {
+        NetworkRepo.build().create(WikiService.class).checkExpression(RequestBody.create("a + b = c", MediaType.parse("multipart/form-data"))).enqueue(new Callback<WikiResponse>() {
             @Override
             public void onResponse(Call<WikiResponse> call, Response<WikiResponse> response) {
-                if (response != null){
-                    if(response.isSuccessful()){
+                if (response != null) {
+                    if (response.isSuccessful()) {
                         Log.e("TARAN", "Success " + response.body());
                     } else {
                         Log.e("TARAN", "Failure " + response.code());
