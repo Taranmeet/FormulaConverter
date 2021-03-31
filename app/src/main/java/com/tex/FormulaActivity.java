@@ -9,6 +9,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.tex.viewmodel.FormulaViewModel;
 
+import java.io.File;
+
 public class FormulaActivity extends AppCompatActivity {
 
     private FormulaViewModel viewModel;
@@ -18,9 +20,10 @@ public class FormulaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formula);
         viewModel = new FormulaViewModel();
+        File f = new File(getExternalFilesDir(null)+ File.separator + "Future Studio Icon.png");
         findViewById(R.id.tv_go).setOnClickListener(v -> {
-            viewModel.onClick().observe(this, s -> {
-                Picasso.get().load("https://en.wikipedia.org/api/rest_v1/media/math/render/png/" + s).into(findViewById(R.id.iv_go), new Callback() {
+            viewModel.onClick(f).observe(this, s -> {
+                Picasso.get().load(f).into(findViewById(R.id.iv_go), new Callback() {
                     @Override
                     public void onSuccess() {
                         Log.e("TARAN", "Image loaded Success !!");
