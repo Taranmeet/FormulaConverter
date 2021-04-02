@@ -25,7 +25,7 @@ public class NetworkRepo {
                     .baseUrl(ProjectConstants.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(client)
-                    .addCallAdapterFactory(new LiveDataCallAdapterFactory())
+//                    .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                     .build();
         } else{
             return new Retrofit.Builder()

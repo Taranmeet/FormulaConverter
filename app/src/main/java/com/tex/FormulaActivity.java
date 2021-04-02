@@ -1,10 +1,13 @@
 package com.tex;
 
 import android.Manifest;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.tex.base.BaseActivity;
 import com.tex.viewmodel.FormulaViewModel;
@@ -30,10 +33,20 @@ public class FormulaActivity extends BaseActivity {
 
         File f = new File(getExternalFilesDir(null) + File.separator + "Future Studio Icon.png");
         findViewById(R.id.tv_go).setOnClickListener(v -> {
-            /*viewModel.onClick(f).observe(this, s -> {
-                Picasso.get().load(f).into((ImageView) findViewById(R.id.iv_go));
-            });*/
-            viewModel.onClick2(f);
+            viewModel.checkFormula().observe(this, s -> {
+                File file = new File(s);
+                Picasso.get().load(Uri.fromFile(file)).into((ImageView) findViewById(R.id.iv_go), new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.e("Picaso", "Success");
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("Picaso", "Fail " + e);
+                    }
+                });
+            });
         });
 
     }

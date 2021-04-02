@@ -1,7 +1,5 @@
 package com.tex.network;
 
-import androidx.lifecycle.LiveData;
-
 import com.tex.response.WikiResponse;
 
 import okhttp3.RequestBody;
@@ -28,18 +26,6 @@ public interface WikiService {
     @POST("media/math/check/tex")
     Call<WikiResponse> checkExpression(@Part("q") RequestBody exp);
 
-    @Multipart
-    @Headers({
-            "Authority: en.wikipedia.org",
-            "Method: POST",
-            "Path: /api/rest_v1/media/math/check/tex",
-            "Scheme: https",
-            "Accept: application/json",
-            "Accept-Encoding: gzip, deflate, br"
-    })
-    @POST("media/math/check/tex")
-    LiveData<ApiResponse<WikiResponse>> checkExpressionLive(@Part("q") RequestBody exp);
-
     @Headers({
             "Authority: en.wikipedia.org",
             "Method: POST",
@@ -50,8 +36,5 @@ public interface WikiService {
     })
     @GET
     Call<ResponseBody> downloadImage(@Url String path);
-
-    @GET
-    LiveData<ApiResponse<ResponseBody>> downloadImage2(@Url String path);
 
 }
