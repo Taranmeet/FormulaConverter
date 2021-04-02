@@ -26,6 +26,8 @@ public class FormulaViewModel extends ViewModel {
 
     public MutableLiveData<String> hash = new MutableLiveData<>();
 
+    private boolean isCachingEnabled = false;
+
     public MutableLiveData<String> onClick(File iFile) {
         NetworkRepo.build().create(WikiService.class).checkExpression(RequestBody.create("a + b = c", MediaType.parse("multipart/form-data"))).enqueue(new Callback<WikiResponse>() {
             @Override
@@ -126,4 +128,11 @@ public class FormulaViewModel extends ViewModel {
         }
     }
 
+    public boolean isCachingEnabled() {
+        return isCachingEnabled;
+    }
+
+    public void setCachingEnabled(boolean cachingEnabled) {
+        isCachingEnabled = cachingEnabled;
+    }
 }
