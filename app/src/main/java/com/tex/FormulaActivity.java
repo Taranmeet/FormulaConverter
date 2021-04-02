@@ -30,9 +30,10 @@ public class FormulaActivity extends BaseActivity {
 
         File f = new File(getExternalFilesDir(null) + File.separator + "Future Studio Icon.png");
         findViewById(R.id.tv_go).setOnClickListener(v -> {
-            viewModel.onClick(f).observe(this, s -> {
+            /*viewModel.onClick(f).observe(this, s -> {
                 Picasso.get().load(f).into((ImageView) findViewById(R.id.iv_go));
-            });
+            });*/
+            viewModel.onClick2(f);
         });
 
     }

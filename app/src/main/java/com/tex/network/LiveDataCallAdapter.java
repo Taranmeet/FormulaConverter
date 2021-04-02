@@ -13,11 +13,12 @@ public class LiveDataCallAdapter<R> implements CallAdapter<R, LiveData<ApiRespon
 
     private boolean isSuccess = false;
 
-    private Type mType;
+    private final Type mType;
 
-    public LiveDataCallAdapter(Type iType){
+    public LiveDataCallAdapter(Type iType) {
         mType = iType;
     }
+
     @Override
     public Type responseType() {
         return mType;
@@ -30,7 +31,7 @@ public class LiveDataCallAdapter<R> implements CallAdapter<R, LiveData<ApiRespon
             @Override
             protected void onActive() {
                 super.onActive();
-                if(!isSuccess) enqueue();
+                if (!isSuccess) enqueue();
             }
 
             @Override
@@ -39,28 +40,27 @@ public class LiveDataCallAdapter<R> implements CallAdapter<R, LiveData<ApiRespon
                 dequeue();
             }
 
-            private void dequeue(){
-                if(call.isExecuted()) call.cancel();
+            private void dequeue() {
+                if (call.isExecuted()) call.cancel();
             }
 
-            private void enqueue(){
+            private void enqueue() {
                 call.enqueue(new Callback<R>() {
                     @Override
                     public void onResponse(Call<R> call, Response<R> response) {
-                        postValue(ApiResponse.create(response));
+                        postValue(ApiResponseFactory.create(response));
                         isSuccess = true;
                     }
 
                     @Override
                     public void onFailure(Call<R> call, Throwable t) {
-                        postValue(ApiResponse.create(0, t));
+                        t.printStackTrace();
+                        postValue(ApiResponseFactory.create(0, t));
                     }
                 });
             }
         };
     }
-
-
 
 
 }

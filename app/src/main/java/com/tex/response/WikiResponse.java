@@ -5,8 +5,9 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.tex.network.ApiErrorResponse;
+import com.tex.network.ApiResponse;
 
-public class WikiResponse extends ApiErrorResponse {
+public class WikiResponse extends ApiResponse<WikiResponse> {
 
     @SerializedName("success")
     @Expose
@@ -25,7 +26,6 @@ public class WikiResponse extends ApiErrorResponse {
     private Boolean endsWithDot;
 
     public WikiResponse(int iErrorCode, String iErrorMsg) {
-        super(iErrorCode, iErrorMsg);
     }
 
     public Boolean getSuccess() {

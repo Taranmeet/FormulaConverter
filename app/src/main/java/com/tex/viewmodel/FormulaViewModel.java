@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.tex.network.ApiErrorResponse;
 import com.tex.network.NetworkRepo;
 import com.tex.network.WikiService;
 import com.tex.response.WikiResponse;
@@ -29,7 +30,7 @@ public class FormulaViewModel extends ViewModel {
     private boolean isCachingEnabled = false;
 
     public MutableLiveData<String> onClick(File iFile) {
-        NetworkRepo.build().create(WikiService.class).checkExpression(RequestBody.create("a + b = c", MediaType.parse("multipart/form-data"))).enqueue(new Callback<WikiResponse>() {
+        NetworkRepo.build(true).create(WikiService.class).checkExpression(RequestBody.create("a + b = c", MediaType.parse("multipart/form-data"))).enqueue(new Callback<WikiResponse>() {
             @Override
             public void onResponse(Call<WikiResponse> call, Response<WikiResponse> response) {
                 if (response != null) {
@@ -37,13 +38,13 @@ public class FormulaViewModel extends ViewModel {
                         Log.e("TARAN", "Success " + response.body());
                         String hashString = response.headers().get("x-resource-location");
 //                        hash.postValue(hashString);
-                        NetworkRepo.build().create(WikiService.class).downloadImage("https://en.wikipedia.org/api/rest_v1/media/math/render/png/" + hashString).enqueue(new Callback<ResponseBody>() {
+                        NetworkRepo.build(true).create(WikiService.class).downloadImage("https://en.wikipedia.org/api/rest_v1/media/math/render/png/" + hashString).enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if(response.isSuccessful()){
+                                if (response.isSuccessful()) {
                                     Log.e("TARAN", "Success " + response.body());
                                     boolean writeSuccess = writeResponseBodyToDisk(response.body(), iFile);
-                                    if (writeSuccess){
+                                    if (writeSuccess) {
                                         Log.e("TARAN", "write Success " + response.body());
                                         hash.postValue(hashString);
                                     } else {
@@ -74,11 +75,44 @@ public class FormulaViewModel extends ViewModel {
         return hash;
     }
 
+    public void onClick2(File iFile) {
+        NetworkRepo.build(true).create(WikiService.class).checkExpressionLive(RequestBody.create("a + b = c", MediaType.parse("multipart/form-data"))).observeForever(wikiResponse -> {
+            if (wikiResponse != null && wikiResponse.isSuccess()) {
+                String hashString = wikiResponse.getHeaders().get("x-resource-location");
+                NetworkRepo.build(false).create(WikiService.class).downloadImage("https://en.wikipedia.org/api/rest_v1/media/math/render/png/" + hashString).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        Log.e("TARAN", "Image loaded Success");
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.e("TARAN", "Image loaded Failure");
+                    }
+                });/*observeForever(responseBody -> {
+                    if (responseBody != null) {
+                        Log.e("TARAN", "Image loaded Failure");
+                        *//*boolean writeSuccess = writeResponseBodyToDisk(responseBody.getResponse(), iFile);
+                        if (writeSuccess) {
+                            hash.postValue(hashString);
+                        } else {
+                            Log.e("TARAN", "write failure " + responseBody.getResponse());
+                        }*//*
+                    } else {
+                        Log.e("TARAN", "Image load Failure");
+                    }
+                });*/
+            } else if (wikiResponse instanceof ApiErrorResponse) {
+                Log.e("TARAN", "Failure " + ((ApiErrorResponse<WikiResponse>) wikiResponse).getErrorMsg());
+            }
+        });
+    }
+
     private boolean writeResponseBodyToDisk(ResponseBody body, File file) {
         try {
             // todo change the file location/name according to your needs
 
-            if(!file.exists()){
+            if (!file.exists()) {
                 boolean created = file.createNewFile();
                 Log.e("Taran", "created " + created);
             }
