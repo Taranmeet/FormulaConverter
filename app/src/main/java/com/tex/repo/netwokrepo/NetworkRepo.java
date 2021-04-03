@@ -1,7 +1,8 @@
-package com.tex.network;
+package com.tex.repo.netwokrepo;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.tex.network.WikiService;
 import com.tex.utils.ProjectConstants;
 
 import okhttp3.OkHttpClient;

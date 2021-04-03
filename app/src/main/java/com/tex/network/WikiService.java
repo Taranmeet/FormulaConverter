@@ -1,6 +1,6 @@
 package com.tex.network;
 
-import com.tex.response.WikiResponse;
+import com.tex.response.WikiResponseModel;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -24,7 +24,7 @@ public interface WikiService {
             "Accept-Encoding: gzip, deflate, br"
     })
     @POST("media/math/check/tex")
-    Call<WikiResponse> checkExpression(@Part("q") RequestBody exp);
+    Call<WikiResponseModel> checkExpression(@Part("q") RequestBody exp);
 
     @Headers({
             "Authority: en.wikipedia.org",

@@ -1,15 +1,15 @@
-package com.tex;
+package com.tex.repo;
 
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.tex.FormulaApplication;
 import com.tex.network.ApiResponse;
 import com.tex.network.ApiResponseFactory;
-import com.tex.network.NetworkRepo;
-import com.tex.network.WikiService;
-import com.tex.response.WikiResponse;
+import com.tex.repo.netwokrepo.NetworkRepo;
+import com.tex.response.WikiResponseModel;
 import com.tex.utils.ProjectConstants;
 
 import java.io.File;
@@ -27,14 +27,14 @@ import retrofit2.Response;
 
 public class DataRepo {
 
-    public static LiveData<ApiResponse<WikiResponse>> checkFormula(String iFormula) {
-        MutableLiveData<ApiResponse<WikiResponse>> liveData = new MutableLiveData<>();
+    public static LiveData<ApiResponse<WikiResponseModel>> checkFormula(String iFormula) {
+        MutableLiveData<ApiResponse<WikiResponseModel>> liveData = new MutableLiveData<>();
         NetworkRepo
                 .build()
                 .checkExpression(RequestBody.create(iFormula, MediaType.parse("multipart/form-data")))
-                .enqueue(new Callback<WikiResponse>() {
+                .enqueue(new Callback<WikiResponseModel>() {
                     @Override
-                    public void onResponse(Call<WikiResponse> call, Response<WikiResponse> response) {
+                    public void onResponse(Call<WikiResponseModel> call, Response<WikiResponseModel> response) {
                         if (response != null && response.isSuccessful()) {
                             liveData.postValue(ApiResponseFactory.create(response));
                         } else if (response != null) {
@@ -46,7 +46,7 @@ public class DataRepo {
                     }
 
                     @Override
-                    public void onFailure(Call<WikiResponse> call, Throwable t) {
+                    public void onFailure(Call<WikiResponseModel> call, Throwable t) {
                         Log.e("TARAN", "Failure");
                         liveData.postValue(ApiResponseFactory.create(0, t));
                     }
