@@ -30,8 +30,7 @@ public class DataRepo {
     public static LiveData<ApiResponse<WikiResponse>> checkFormula(String iFormula) {
         MutableLiveData<ApiResponse<WikiResponse>> liveData = new MutableLiveData<>();
         NetworkRepo
-                .build(true)
-                .create(WikiService.class)
+                .build()
                 .checkExpression(RequestBody.create(iFormula, MediaType.parse("multipart/form-data")))
                 .enqueue(new Callback<WikiResponse>() {
                     @Override
@@ -58,8 +57,7 @@ public class DataRepo {
     public static LiveData<String> downloadImage(String iHash) {
         MutableLiveData<String> imageData = new MutableLiveData<>();
         NetworkRepo
-                .build(true)
-                .create(WikiService.class)
+                .build()
                 .downloadImage(ProjectConstants.BASE_IMAGE_URL + iHash)
         .enqueue(new Callback<ResponseBody>() {
             @Override
