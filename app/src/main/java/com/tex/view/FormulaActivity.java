@@ -1,4 +1,4 @@
-package com.tex;
+package com.tex.view;
 
 import android.Manifest;
 import android.net.Uri;
@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.tex.R;
 import com.tex.base.BaseActivity;
 import com.tex.viewmodel.FormulaViewModel;
 

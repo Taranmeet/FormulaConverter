@@ -3,7 +3,7 @@ package com.tex.repo.localrepo;
 import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 
-import com.tex.FormulaApplication;
+import com.tex.utils.FormulaApplication;
 import com.tex.repo.localrepo.dao.FormulaDao;
 import com.tex.repo.localrepo.models.FormulaModel;
 import com.tex.utils.LiveDataUtil;

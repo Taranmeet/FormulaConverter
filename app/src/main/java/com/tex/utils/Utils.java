@@ -2,8 +2,6 @@ package com.tex.utils;
 
 import android.util.Log;
 
-import com.tex.FormulaApplication;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

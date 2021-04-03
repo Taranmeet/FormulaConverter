@@ -15,9 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FormulaConverter"
-        android:name=".FormulaApplication"
+        android:name=".utils.FormulaApplication"
         >
-        <activity android:name=".FormulaActivity">
+        <activity android:name=".view.FormulaActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

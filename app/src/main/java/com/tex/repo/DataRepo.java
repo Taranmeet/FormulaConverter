@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.tex.FormulaApplication;
+import com.tex.utils.FormulaApplication;
 import com.tex.network.ApiResponseFactory;
 import com.tex.repo.localrepo.DBRepoFactory;
 import com.tex.repo.localrepo.models.FormulaModel;

@@ -1,4 +1,4 @@
-package com.tex;
+package com.tex.utils;
 
 import android.app.Application;
 
