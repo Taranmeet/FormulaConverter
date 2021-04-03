@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.tex.repo.DataRepo;
+import com.tex.repo.localrepo.DBRepoFactory;
+import com.tex.utils.Utils;
 
 public class FormulaViewModel extends ViewModel {
 
@@ -14,10 +16,13 @@ public class FormulaViewModel extends ViewModel {
     private boolean isCachingEnabled = false;
 
     public MutableLiveData<String> checkFormula() {
-        DataRepo.checkFormula("a + b = c").observeForever(wikiResponse -> {
-            if (wikiResponse != null) {
-                String hashString = wikiResponse.getHeaders().get("x-resource-location");
+        DataRepo.checkFormula(Utils.trimWhiteSpaces("a + b = c")).observeForever(formulaModel -> {
+            if (formulaModel != null && formulaModel.mSuccess) {
+                String hashString = formulaModel.mFormulaHash;
                 DataRepo.downloadImage(hashString).observeForever(s -> {
+                    if (formulaModel.mSuccess) {
+                        DBRepoFactory.getInstance().saveFormulaToDb(formulaModel);
+                    }
                     hash.postValue(s);
                 });
             } else {

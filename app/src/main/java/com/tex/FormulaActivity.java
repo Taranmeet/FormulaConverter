@@ -7,6 +7,8 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.lifecycle.Observer;
+
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.tex.base.BaseActivity;
@@ -33,21 +35,27 @@ public class FormulaActivity extends BaseActivity {
 
         File f = new File(getExternalFilesDir(null) + File.separator + "Future Studio Icon.png");
         findViewById(R.id.tv_go).setOnClickListener(v -> {
-            viewModel.checkFormula().observe(this, s -> {
-                File file = new File(s);
-                Picasso.get().load(Uri.fromFile(file)).into((ImageView) findViewById(R.id.iv_go), new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        Log.e("Picaso", "Success");
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        Log.e("Picaso", "Fail " + e);
-                    }
-                });
-            });
-        });
+            viewModel.checkFormula().observe(this, checkFormulaObserver);
+        }
+        );
 
     }
+
+    Observer<String> checkFormulaObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String s) {
+            File file = new File(s);
+            Picasso.get().load(Uri.fromFile(file)).into(findViewById(R.id.iv_go), new Callback() {
+                @Override
+                public void onSuccess() {
+                    Log.e("Picaso", "Success");
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("Picaso", "Fail " + e);
+                }
+            });
+        }
+    };
 }
