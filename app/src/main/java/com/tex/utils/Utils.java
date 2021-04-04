@@ -1,5 +1,7 @@
 package com.tex.utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.util.Log;
 
 import java.io.File;
@@ -21,7 +23,7 @@ public class Utils {
         return file.exists();
     }
 
-    public static String getImagePath(String iHash){
+    public static String getImagePath(String iHash) {
         return FormulaApplication.mContext.getExternalFilesDir(null)
                 + File.separator
                 + iHash
@@ -79,5 +81,19 @@ public class Utils {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    /**
+     * Method to check internet connection.
+     *
+     * @return true if internet is connected.
+     */
+    public static boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) FormulaApplication
+                .mContext
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null &&
+                cm.getActiveNetworkInfo().isConnected();
     }
 }

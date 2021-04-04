@@ -14,18 +14,11 @@ import com.tex.utils.Action;
 
 public class BaseActivity extends AppCompatActivity {
 
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        hideActionBar();
-    }
-
     /**
      * Method to hide action bar
      */
-    private void hideActionBar() {
-        getSupportActionBar().hide();
+    public void hideActionBar() {
+//        getSupportActionBar().hide();
     }
 
     /**

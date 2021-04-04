@@ -2,13 +2,13 @@ package com.tex.viewmodel;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.tex.repo.DataRepo;
 import com.tex.repo.localrepo.DBRepoFactory;
+import com.tex.repo.localrepo.models.FormulaModel;
 import com.tex.utils.Utils;
 
 import java.io.File;
@@ -17,26 +17,41 @@ public class FormulaViewModel extends ViewModel {
 
     public MutableLiveData<Uri> mImageLiveData = new MutableLiveData<>();
 
+    public MutableLiveData<FormulaModel> mErrorModel = new MutableLiveData<>();
+
     private boolean isCachingEnabled = false;
 
     private Uri mImageUri = null;
 
-    public MutableLiveData<Uri> checkFormula() {
-        DataRepo.checkFormula(Utils.trimWhiteSpaces("a + b = c")).observeForever(formulaModel -> {
-            if (formulaModel != null && formulaModel.mSuccess) {
-                String hashString = formulaModel.mFormulaHash;
-                DataRepo.downloadImage(hashString).observeForever(s -> {
-                    if (formulaModel.mSuccess) {
-                        DBRepoFactory.getInstance().saveFormulaToDb(formulaModel);
-                    }
-                    File file = new File(s);
-                    mImageUri = Uri.fromFile(file);
-                    mImageLiveData.postValue(mImageUri);
-                });
-            } else {
-                Log.e("TARAN", "TAG false");
-            }
-        });
+    public MutableLiveData<Uri> checkFormula(String iQuery) {
+        if (Utils.isNetworkConnected()) {
+            DataRepo.checkFormula(Utils.trimWhiteSpaces(iQuery)).observeForever(formulaModel -> {
+                if (formulaModel != null && formulaModel.mSuccess) {
+                    String hashString = formulaModel.mFormulaHash;
+                    DataRepo.downloadImage(hashString).observeForever(s -> {
+                        if (formulaModel.mSuccess) {
+                            DBRepoFactory.getInstance().saveFormulaToDb(formulaModel);
+                        }
+                        File file = new File(s);
+                        mImageUri = Uri.fromFile(file);
+                        mImageLiveData.postValue(mImageUri);
+                    });
+                } else if (formulaModel != null) {
+                    formulaModel.isBadRequest = true;
+                    mErrorModel.postValue(formulaModel);
+                } else {
+                    FormulaModel failModel = new FormulaModel();
+                    failModel.mFormula = Utils.trimWhiteSpaces(iQuery);
+                    failModel.isBadRequest = true;
+                    mErrorModel.postValue(failModel);
+                }
+            });
+        } else {
+            FormulaModel failModel = new FormulaModel();
+            failModel.mFormula = Utils.trimWhiteSpaces(iQuery);
+            failModel.isInternetIssue = true;
+            mErrorModel.postValue(failModel);
+        }
         return mImageLiveData;
     }
 

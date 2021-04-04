@@ -3,6 +3,7 @@ package com.tex.repo.localrepo.models;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.tex.network.ApiResponse;
@@ -24,6 +25,12 @@ public class FormulaModel {
 
     @ColumnInfo(name = "success")
     public boolean mSuccess;
+
+    @Ignore
+    public boolean isInternetIssue;
+
+    @Ignore
+    public boolean isBadRequest;
 
     public static FormulaModel convertFromNetworkModel(ApiResponse<WikiResponseModel> iResponse) {
         if (iResponse.isSuccess()) {

@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/dimen_20"
         tools:context=".view.FormulaActivity">
 
-        <EditText
-            android:id="@+id/et_go"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:hint="@string/type_formula"
-            android:maxLines="1"
-            android:textColorHint="@color/robart" />
+            android:background="@color/robart"
+            app:theme="@style/AppTheme.Toolbar" />
 
         <ImageView
             android:id="@+id/iv_go"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/dimen_20"
+            android:layout_marginRight="@dimen/dimen_20"
             android:background="@drawable/img_bg"
             android:scaleType="fitXY" />
 

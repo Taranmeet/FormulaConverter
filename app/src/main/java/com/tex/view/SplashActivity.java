@@ -22,6 +22,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideActionBar();
         mBinding = DataBindingUtil.setContentView(this, R.layout.splash_activity);
         SplashViewModel viewModel = new ViewModelProvider(this).get(SplashViewModel.class);
 
