@@ -5,19 +5,37 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="@dimen/dimen_20"
         tools:context=".view.FormulaActivity">
 
-        <TextView
-            android:id="@+id/tv_go"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/et_go"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello World!" />
+            android:background="@color/white"
+            android:hint="@string/type_formula"
+            android:maxLines="1"
+            android:textColorHint="@color/robart" />
 
         <ImageView
             android:id="@+id/iv_go"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/img_bg"
+            android:scaleType="fitXY" />
+
+        <ImageView
+            android:id="@+id/iv_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_go" />
+            android:layout_below="@id/iv_go"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimen_50"
+            android:background="@drawable/img_bg_circle"
+            android:padding="10dp"
+            android:scaleType="center"
+            android:src="@drawable/baseline_share_24" />
 
     </RelativeLayout>
 </layout>

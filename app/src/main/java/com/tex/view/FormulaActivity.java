@@ -4,6 +4,7 @@ import android.Manifest;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
@@ -30,6 +31,29 @@ public class FormulaActivity extends BaseActivity {
      */
     private FormulaActivityBinding mBinding;
 
+    /**
+     * Observer called when image uri is fetched.
+     */
+    private final Observer<String> checkFormulaObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String s) {
+            File file = new File(s);
+            Picasso.get().load(Uri.fromFile(file)).into(mBinding.ivGo, new Callback() {
+                @Override
+                public void onSuccess() {
+                    Log.e("Picaso", "Success");
+                    mBinding.ivGo.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("Picaso", "Fail " + e);
+                    mBinding.ivGo.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,28 +67,14 @@ public class FormulaActivity extends BaseActivity {
             Toast.makeText(this, "Caching of images will not work indefinitely", Toast.LENGTH_SHORT).show();
         });
 
-        mBinding.tvGo.setOnClickListener(v -> {
-            mViewModel.checkFormula().observe(this, checkFormulaObserver);
-        }
+        mBinding.etGo.setOnClickListener(v -> {
+                    mViewModel.checkFormula().observe(this, checkFormulaObserver);
+                }
         );
 
+        mBinding.ivShare.setOnClickListener(v -> {
+            
+        });
+
     }
-
-    private final Observer<String> checkFormulaObserver = new Observer<String>() {
-        @Override
-        public void onChanged(String s) {
-            File file = new File(s);
-            Picasso.get().load(Uri.fromFile(file)).into(mBinding.ivGo, new Callback() {
-                @Override
-                public void onSuccess() {
-                    Log.e("Picaso", "Success");
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    Log.e("Picaso", "Fail " + e);
-                }
-            });
-        }
-    };
 }
