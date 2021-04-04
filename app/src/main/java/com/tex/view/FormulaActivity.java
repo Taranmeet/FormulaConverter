@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
@@ -16,8 +15,6 @@ import com.tex.R;
 import com.tex.base.BaseActivity;
 import com.tex.databinding.FormulaActivityBinding;
 import com.tex.viewmodel.FormulaViewModel;
-
-import java.io.File;
 
 public class FormulaActivity extends BaseActivity {
 
@@ -34,11 +31,10 @@ public class FormulaActivity extends BaseActivity {
     /**
      * Observer called when image uri is fetched.
      */
-    private final Observer<String> checkFormulaObserver = new Observer<String>() {
+    private final Observer<Uri> mCheckFormulaObserver = new Observer<Uri>() {
         @Override
-        public void onChanged(String s) {
-            File file = new File(s);
-            Picasso.get().load(Uri.fromFile(file)).into(mBinding.ivGo, new Callback() {
+        public void onChanged(Uri iUri) {
+            Picasso.get().load(iUri).into(mBinding.ivGo, new Callback() {
                 @Override
                 public void onSuccess() {
                     Log.e("Picaso", "Success");
@@ -60,21 +56,16 @@ public class FormulaActivity extends BaseActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.formula_activity);
         mViewModel = new FormulaViewModel();
 
-        checkPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, () -> {
-            mViewModel.setCachingEnabled(true);
-        }, () -> {
-            mViewModel.setCachingEnabled(true);
-            Toast.makeText(this, "Caching of images will not work indefinitely", Toast.LENGTH_SHORT).show();
+        checkPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE, () -> mViewModel.setCachingEnabled(true), () -> {
+            mViewModel.setCachingEnabled(false);
         });
 
-        mBinding.etGo.setOnClickListener(v -> {
-                    mViewModel.checkFormula().observe(this, checkFormulaObserver);
-                }
+        mBinding.etGo.setOnClickListener(v -> mViewModel
+                .checkFormula()
+                .observe(this, mCheckFormulaObserver)
         );
 
-        mBinding.ivShare.setOnClickListener(v -> {
-            
-        });
+        mBinding.ivShare.setOnClickListener(v -> startActivity(mViewModel.shareImage()));
 
     }
 }

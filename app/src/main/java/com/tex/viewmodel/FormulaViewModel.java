@@ -1,5 +1,7 @@
 package com.tex.viewmodel;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -9,13 +11,17 @@ import com.tex.repo.DataRepo;
 import com.tex.repo.localrepo.DBRepoFactory;
 import com.tex.utils.Utils;
 
+import java.io.File;
+
 public class FormulaViewModel extends ViewModel {
 
-    public MutableLiveData<String> hash = new MutableLiveData<>();
+    public MutableLiveData<Uri> mImageLiveData = new MutableLiveData<>();
 
     private boolean isCachingEnabled = false;
 
-    public MutableLiveData<String> checkFormula() {
+    private Uri mImageUri = null;
+
+    public MutableLiveData<Uri> checkFormula() {
         DataRepo.checkFormula(Utils.trimWhiteSpaces("a + b = c")).observeForever(formulaModel -> {
             if (formulaModel != null && formulaModel.mSuccess) {
                 String hashString = formulaModel.mFormulaHash;
@@ -23,13 +29,15 @@ public class FormulaViewModel extends ViewModel {
                     if (formulaModel.mSuccess) {
                         DBRepoFactory.getInstance().saveFormulaToDb(formulaModel);
                     }
-                    hash.postValue(s);
+                    File file = new File(s);
+                    mImageUri = Uri.fromFile(file);
+                    mImageLiveData.postValue(mImageUri);
                 });
             } else {
                 Log.e("TARAN", "TAG false");
             }
         });
-        return hash;
+        return mImageLiveData;
     }
 
     public boolean isCachingEnabled() {
@@ -38,5 +46,18 @@ public class FormulaViewModel extends ViewModel {
 
     public void setCachingEnabled(boolean cachingEnabled) {
         isCachingEnabled = cachingEnabled;
+    }
+
+    /**
+     * Method to create share image intent.
+     *
+     * @return Intent created for share image.
+     */
+    public Intent shareImage() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_STREAM, mImageUri);
+        sendIntent.setType("image/png");
+        return Intent.createChooser(sendIntent, "Send your image");
     }
 }
