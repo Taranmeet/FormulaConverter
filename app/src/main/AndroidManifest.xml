@@ -17,16 +17,20 @@
         android:theme="@style/Theme.FormulaConverter"
         android:usesCleartextTraffic="true">
 
-        <activity android:name=".view.FormulaActivity">
-
-        </activity>
-        <activity android:name=".view.SplashActivity">
+        <activity
+            android:name=".view.SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".view.FormulaActivity"
+            android:screenOrientation="portrait" />
+        
     </application>
 
 </manifest>
