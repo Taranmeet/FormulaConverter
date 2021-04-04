@@ -8,14 +8,22 @@ import java.util.concurrent.TimeUnit;
 
 public class SplashViewModel extends ViewModel {
 
-    private final MutableLiveData<Void> timerLiveData = new MutableLiveData<>();
+    /**
+     * Live data used to notify Activity when it is time to load next screen.
+     */
+    private final MutableLiveData<Void> mTimerLiveData = new MutableLiveData<>();
 
+    /**
+     * Method used to start count down for Splash screen.
+     *
+     * @return Live data that can be observed to know when time has come to end splash screen.
+     */
     public MutableLiveData<Void> startCountDown() {
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
         executor.schedule(() -> {
-            timerLiveData.postValue(null);
+            mTimerLiveData.postValue(null);
         }, 1000, TimeUnit.MILLISECONDS);
-        return timerLiveData;
+        return mTimerLiveData;
     }
 
 }

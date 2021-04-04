@@ -2,9 +2,11 @@ package com.tex.base;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -12,6 +14,27 @@ import com.tex.utils.Action;
 
 public class BaseActivity extends AppCompatActivity {
 
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        hideActionBar();
+    }
+
+    /**
+     * Method to hide action bar
+     */
+    private void hideActionBar() {
+        getSupportActionBar().hide();
+    }
+
+    /**
+     * Method to check if particular permission has been granted to application.
+     *
+     * @param iPermission Permission to be checked.
+     * @param iSuccess    Callback to notify when permission has been granted.
+     * @param iFailure    Callback to notify when permission was declined.
+     */
     public void checkPermissionGranted(String iPermission, Action iSuccess, Action iFailure) {
         if (ContextCompat.checkSelfPermission(
                 this, iPermission) ==
