@@ -12,6 +12,7 @@ import com.tex.repo.DataRepo;
 import com.tex.repo.localrepo.DBRepoFactory;
 import com.tex.repo.localrepo.models.FormulaModel;
 import com.tex.utils.FormulaApplication;
+import com.tex.utils.ProjectConstants;
 import com.tex.utils.Utils;
 
 import java.io.File;
@@ -19,6 +20,8 @@ import java.io.File;
 public class FormulaViewModel extends ViewModel {
 
     public MutableLiveData<Uri> mImageLiveData = new MutableLiveData<>();
+
+    public MutableLiveData<String> mImageDirectAccessLiveData = new MutableLiveData<>();
 
     public MutableLiveData<FormulaModel> mErrorModel = new MutableLiveData<>();
 
@@ -30,14 +33,18 @@ public class FormulaViewModel extends ViewModel {
             DataRepo.checkFormula(Utils.trimWhiteSpaces(iQuery)).observeForever(formulaModel -> {
                 if (formulaModel != null && formulaModel.mSuccess) {
                     String hashString = formulaModel.mFormulaHash;
-                    DataRepo.downloadImage(hashString).observeForever(s -> {
-                        if (formulaModel.mSuccess) {
-                            DBRepoFactory.getInstance().saveFormulaToDb(formulaModel);
-                        }
-                        File file = new File(s);
-                        mImageUri = Uri.fromFile(file);
-                        mImageLiveData.postValue(mImageUri);
-                    });
+                    if (isCachingEnabled) {
+                        DataRepo.downloadImage(hashString).observeForever(s -> {
+                            if (formulaModel.mSuccess) {
+                                DBRepoFactory.getInstance().saveFormulaToDb(formulaModel);
+                            }
+                            File file = new File(s);
+                            mImageUri = Uri.fromFile(file);
+                            mImageLiveData.postValue(mImageUri);
+                        });
+                    } else {
+                        mImageDirectAccessLiveData.postValue(ProjectConstants.BASE_IMAGE_URL + hashString);
+                    }
                 } else if (formulaModel != null && !formulaModel.isInternetIssue) {
                     formulaModel.isBadRequest = true;
                     mErrorModel.postValue(formulaModel);

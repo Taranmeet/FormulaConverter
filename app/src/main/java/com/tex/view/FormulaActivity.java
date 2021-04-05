@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -37,24 +36,26 @@ public class FormulaActivity extends BaseActivity {
     private FormulaActivityBinding mBinding;
 
     /**
+     * Callback called when image is loaded.
+     */
+    private final Callback mImageLoadCallback = new Callback() {
+        @Override
+        public void onSuccess() {
+            mBinding.ivGo.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onError(Exception e) {
+            mBinding.ivGo.setVisibility(View.INVISIBLE);
+        }
+    };
+    /**
      * Observer called when image uri is fetched.
      */
     private final Observer<Uri> mCheckFormulaObserver = new Observer<Uri>() {
         @Override
         public void onChanged(Uri iUri) {
-            Picasso.get().load(iUri).into(mBinding.ivGo, new Callback() {
-                @Override
-                public void onSuccess() {
-                    Log.e("Picaso", "Success");
-                    mBinding.ivGo.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    Log.e("Picaso", "Fail " + e);
-                    mBinding.ivGo.setVisibility(View.INVISIBLE);
-                }
-            });
+            Picasso.get().load(iUri).into(mBinding.ivGo, mImageLoadCallback);
         }
     };
 
@@ -96,6 +97,10 @@ public class FormulaActivity extends BaseActivity {
             mViewModel
                     .checkFormula(query)
                     .observe(this, mCheckFormulaObserver);
+
+            mViewModel.mImageDirectAccessLiveData.observe(this, s -> {
+                Picasso.get().load(s).into(mBinding.ivGo, mImageLoadCallback);
+            });
         }
     }
 
