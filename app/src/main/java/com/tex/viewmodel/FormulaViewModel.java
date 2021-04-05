@@ -107,13 +107,14 @@ public class FormulaViewModel extends ViewModel {
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.putExtra(Intent.EXTRA_STREAM, mImageUri);
             sendIntent.setType("image/png");
-            return Intent.createChooser(sendIntent, "Send your image");
+            return Intent.createChooser(sendIntent, "Share your image");
         } else {
             Intent sendIntent = new Intent();
             sendIntent.setAction(Intent.ACTION_SEND);
             sendIntent.putExtra(Intent.EXTRA_TEXT, mImageURL);
-            sendIntent.setType("image/png");
-            return Intent.createChooser(sendIntent, "Send your image");
+            sendIntent.setType("text/plain");
+            sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Share your image");
+            return Intent.createChooser(sendIntent, "Share your image");
         }
     }
 
