@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -62,7 +63,7 @@ public class FormulaActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.formula_activity);
         setSupportActionBar(mBinding.toolbar);
-        mViewModel = new FormulaViewModel();
+        mViewModel = new ViewModelProvider(this).get(FormulaViewModel.class);
 
         checkPermissionGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 () -> mViewModel.setCachingEnabled(true),
