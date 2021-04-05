@@ -41,12 +41,12 @@ public class FormulaActivity extends BaseActivity {
     private final Callback mImageLoadCallback = new Callback() {
         @Override
         public void onSuccess() {
-            mBinding.ivGo.setVisibility(View.VISIBLE);
+            mBinding.ivShare.setVisibility(View.VISIBLE);
         }
 
         @Override
         public void onError(Exception e) {
-            mBinding.ivGo.setVisibility(View.INVISIBLE);
+            mBinding.ivShare.setVisibility(View.INVISIBLE);
         }
     };
     /**

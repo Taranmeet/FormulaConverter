@@ -7,4 +7,5 @@
     <string name="type_formula">Type your formula here.</string>
     <string name="hint_search">Search Your Formula!</string>
     <string name="empty_string"> </string>
+    <string name="enter_formula">Kindly search your formula in toolbar above</string>
 </resources>

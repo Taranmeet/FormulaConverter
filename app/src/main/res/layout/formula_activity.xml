@@ -15,6 +15,17 @@
             android:background="@color/robart"
             app:theme="@style/AppTheme.Toolbar" />
 
+        <TextView
+            android:id="@+id/tv_enter_formula"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimen_20"
+            android:text="@string/enter_formula"
+            android:textColor="@color/robart"
+            android:textSize="@dimen/text_18" />
+
         <ImageView
             android:id="@+id/iv_go"
             android:layout_width="match_parent"
@@ -35,7 +46,8 @@
             android:background="@drawable/img_bg_circle"
             android:padding="10dp"
             android:scaleType="center"
-            android:src="@drawable/baseline_share_24" />
+            android:src="@drawable/baseline_share_24"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 </layout>

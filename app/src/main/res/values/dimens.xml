@@ -7,4 +7,5 @@
     <dimen name="dimen_50">50dp</dimen>
     <dimen name="dimen_neg_50">-50dp</dimen>
     <dimen name="dimen_100">100dp</dimen>
+    <dimen name="text_18">18sp</dimen>
 </resources>
