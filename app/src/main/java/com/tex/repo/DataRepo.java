@@ -5,12 +5,12 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.tex.utils.FormulaApplication;
 import com.tex.network.ApiResponseFactory;
 import com.tex.repo.localrepo.DBRepoFactory;
 import com.tex.repo.localrepo.models.FormulaModel;
 import com.tex.repo.netwokrepo.NetworkRepo;
 import com.tex.response.WikiResponseModel;
+import com.tex.utils.FormulaApplication;
 import com.tex.utils.LiveDataUtil;
 import com.tex.utils.ProjectConstants;
 import com.tex.utils.Utils;
@@ -34,38 +34,45 @@ public class DataRepo {
                 formulaModelLiveData.postValue(formulaModel);
             } else {
                 Log.e("TARAN", "Data Not available get from network");
-                NetworkRepo
-                        .build()
-                        .checkExpression(RequestBody.create(iFormula, MediaType.parse("multipart/form-data")))
-                        .enqueue(new Callback<WikiResponseModel>() {
-                            @Override
-                            public void onResponse(Call<WikiResponseModel> call, Response<WikiResponseModel> response) {
-                                FormulaModel model = null;
-                                if (response != null && response.isSuccessful()) {
-                                    model = FormulaModel
-                                            .convertFromNetworkModel(ApiResponseFactory
-                                                    .create(response));
-                                } else if (response != null) {
-                                    model = FormulaModel
-                                            .convertFromNetworkModel(ApiResponseFactory
-                                                    .create(response));
-                                } else {
-                                    model = FormulaModel
-                                            .convertFromNetworkModel(ApiResponseFactory
-                                                    .create(0, null));
+                if (Utils.isNetworkConnected()) {
+                    NetworkRepo
+                            .build()
+                            .checkExpression(RequestBody.create(iFormula, MediaType.parse("multipart/form-data")))
+                            .enqueue(new Callback<WikiResponseModel>() {
+                                @Override
+                                public void onResponse(Call<WikiResponseModel> call, Response<WikiResponseModel> response) {
+                                    FormulaModel model = null;
+                                    if (response != null && response.isSuccessful()) {
+                                        model = FormulaModel
+                                                .convertFromNetworkModel(ApiResponseFactory
+                                                        .create(response));
+                                    } else if (response != null) {
+                                        model = FormulaModel
+                                                .convertFromNetworkModel(ApiResponseFactory
+                                                        .create(response));
+                                    } else {
+                                        model = FormulaModel
+                                                .convertFromNetworkModel(ApiResponseFactory
+                                                        .create(0, null));
 
+                                    }
+                                    formulaModelLiveData.postValue(model);
                                 }
-                                formulaModelLiveData.postValue(model);
-                            }
 
-                            @Override
-                            public void onFailure(Call<WikiResponseModel> call, Throwable t) {
-                                FormulaModel model = FormulaModel
-                                        .convertFromNetworkModel(ApiResponseFactory
-                                                .create(0, t));
-                                formulaModelLiveData.postValue(model);
-                            }
-                        });
+                                @Override
+                                public void onFailure(Call<WikiResponseModel> call, Throwable t) {
+                                    FormulaModel model = FormulaModel
+                                            .convertFromNetworkModel(ApiResponseFactory
+                                                    .create(0, t));
+                                    formulaModelLiveData.postValue(model);
+                                }
+                            });
+                } else {
+                    FormulaModel failModel = new FormulaModel();
+                    failModel.mFormula = Utils.trimWhiteSpaces(iFormula);
+                    failModel.isInternetIssue = true;
+                    formulaModelLiveData.postValue(failModel);
+                }
             }
         });
 

@@ -2,13 +2,16 @@ package com.tex.viewmodel;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.SearchRecentSuggestions;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.tex.contentprovider.SuggestionContentProvider;
 import com.tex.repo.DataRepo;
 import com.tex.repo.localrepo.DBRepoFactory;
 import com.tex.repo.localrepo.models.FormulaModel;
+import com.tex.utils.FormulaApplication;
 import com.tex.utils.Utils;
 
 import java.io.File;
@@ -24,7 +27,6 @@ public class FormulaViewModel extends ViewModel {
     private Uri mImageUri = null;
 
     public MutableLiveData<Uri> checkFormula(String iQuery) {
-        if (Utils.isNetworkConnected()) {
             DataRepo.checkFormula(Utils.trimWhiteSpaces(iQuery)).observeForever(formulaModel -> {
                 if (formulaModel != null && formulaModel.mSuccess) {
                     String hashString = formulaModel.mFormulaHash;
@@ -36,22 +38,18 @@ public class FormulaViewModel extends ViewModel {
                         mImageUri = Uri.fromFile(file);
                         mImageLiveData.postValue(mImageUri);
                     });
-                } else if (formulaModel != null) {
+                } else if (formulaModel != null && !formulaModel.isInternetIssue) {
                     formulaModel.isBadRequest = true;
                     mErrorModel.postValue(formulaModel);
-                } else {
+                } else if (formulaModel != null && formulaModel.isInternetIssue) {
+                    mErrorModel.postValue(formulaModel);
+                } else{
                     FormulaModel failModel = new FormulaModel();
                     failModel.mFormula = Utils.trimWhiteSpaces(iQuery);
                     failModel.isBadRequest = true;
                     mErrorModel.postValue(failModel);
                 }
             });
-        } else {
-            FormulaModel failModel = new FormulaModel();
-            failModel.mFormula = Utils.trimWhiteSpaces(iQuery);
-            failModel.isInternetIssue = true;
-            mErrorModel.postValue(failModel);
-        }
         return mImageLiveData;
     }
 
@@ -74,5 +72,16 @@ public class FormulaViewModel extends ViewModel {
         sendIntent.putExtra(Intent.EXTRA_STREAM, mImageUri);
         sendIntent.setType("image/png");
         return Intent.createChooser(sendIntent, "Send your image");
+    }
+
+    /**
+     * Method to save recent query for future suggestions.
+     *
+     * @param query Query to be saved.
+     */
+    public void saveSuggestion(String query) {
+        SearchRecentSuggestions suggestions = new SearchRecentSuggestions(FormulaApplication.mContext,
+                SuggestionContentProvider.AUTHORITY, SuggestionContentProvider.MODE);
+        suggestions.saveRecentQuery(query, null);
     }
 }

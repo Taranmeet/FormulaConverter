@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.SearchRecentSuggestions;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +21,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.tex.R;
 import com.tex.base.BaseActivity;
-import com.tex.contentprovider.SuggestionContentProvider;
 import com.tex.databinding.FormulaActivityBinding;
 import com.tex.viewmodel.FormulaViewModel;
 
@@ -93,9 +91,7 @@ public class FormulaActivity extends BaseActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
 
-            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                    SuggestionContentProvider.AUTHORITY, SuggestionContentProvider.MODE);
-            suggestions.saveRecentQuery(query, null);
+            mViewModel.saveSuggestion(query);
 
             mViewModel
                     .checkFormula(query)
